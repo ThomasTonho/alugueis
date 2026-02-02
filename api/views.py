@@ -1,24 +1,16 @@
 from django.shortcuts import render
-from rest_framework import viewsets
-from .models import Usuario, Pagamento, Imovel, Contrato
-from .serializers import UsuarioSerializer, PagamentoSerializer, ImovelSerializer, ContratoSerializer
+from rest_framework.generics import ListCreateAPIView
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from .models import Usuario, Imovel, Contrato, Pagamento
+from .serializers import (
+    UsuarioSerializer, 
+    ImovelSerializer, 
+    ContratoSerializer, 
+    PagamentoSerializer
+    )
 
-
-class UsuarioViewSet(viewsets.ModelViewSet):
+class UsuarioListCreateView(ListCreateAPIView):
     queryset = Usuario.objects.all()
-    serializer_class = UsuarioSerializer
-
-
-class PagamentoViewSet(viewsets.ModelViewSet):
-    queryset = Pagamento.objects.all()
-    serializer_class = PagamentoSerializer
-
-
-class ImovelViewSet(viewsets.ModelViewSet):
-    queryset = Imovel.objects.all()
-    serializer_class = ImovelSerializer
-
-
-class ContratoViewSet(viewsets.ModelViewSet):
-    queryset = Contrato.objects.all()
-    serializer_class = ContratoSerializer
+    serializer_class = UsuarioSerializer    
