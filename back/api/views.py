@@ -3,8 +3,9 @@ from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIV
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
 from .models import Usuario, Imovel, Contrato, Pagamento
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from .serializers import (
     UsuarioSerializer, 
     ImovelSerializer, 
@@ -14,6 +15,9 @@ from .serializers import (
 
 # GET E POST para Usuarios
 @api_view(['GET', 'POST'])
+
+@permission_classes([IsAuthenticated])
+
 def listar_usuarios(request):
     if request.method == 'GET':  
         queryset = Usuario.objects.all()
@@ -27,8 +31,11 @@ def listar_usuarios(request):
     else:
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-# GET, PUT, DELETE para Usuarios
-@api_view(['GET', 'PUT', 'DELETE'])
+# GET, PUT, PATCH, DELETE para Usuarios
+@api_view(['GET', 'PUT', 'PATCH', 'DELETE'])
+
+@permission_classes([IsAuthenticated])
+
 def detalhar_usuario(request, pk):
     if request.method == 'GET':  
         usuario = Usuario.objects.get(pk=pk)
@@ -37,6 +44,13 @@ def detalhar_usuario(request, pk):
     elif request.method == 'PUT':  
         usuario = Usuario.objects.get(pk=pk)
         serializer = UsuarioSerializer(usuario, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    elif request.method == 'PATCH':
+        usuario = Usuario.objects.get(pk=pk)
+        serializer = UsuarioSerializer(usuario, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -61,8 +75,8 @@ def listar_imoveis(request):
     else:
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-# GET, PUT, DELETE para Imoveis
-@api_view(['GET', 'PUT', 'DELETE'])
+# GET, PUT, PATCH, DELETE para Imoveis
+@api_view(['GET', 'PUT', 'PATCH', 'DELETE'])
 def detalhar_imovel(request, pk):
     if request.method == 'GET':  
         imovel = Imovel.objects.get(pk=pk)
@@ -71,6 +85,13 @@ def detalhar_imovel(request, pk):
     elif request.method == 'PUT':  
         imovel = Imovel.objects.get(pk=pk)
         serializer = ImovelSerializer(imovel, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    elif request.method == 'PATCH':
+        imovel = Imovel.objects.get(pk=pk)
+        serializer = ImovelSerializer(imovel, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -95,8 +116,8 @@ def listar_contratos(request):
     else:
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-# GET, PUT, DELETE para Contratos
-@api_view(['GET', 'PUT', 'DELETE'])
+# GET, PUT, PATCH, DELETE para Contratos
+@api_view(['GET', 'PUT', 'PATCH', 'DELETE'])
 def detalhar_contrato(request, pk):
     if request.method == 'GET':  
         contrato = Contrato.objects.get(pk=pk)
@@ -105,6 +126,13 @@ def detalhar_contrato(request, pk):
     elif request.method == 'PUT':  
         contrato = Contrato.objects.get(pk=pk)
         serializer = ContratoSerializer(contrato, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    elif request.method == 'PATCH':
+        contrato = Contrato.objects.get(pk=pk)
+        serializer = ContratoSerializer(contrato, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -129,8 +157,8 @@ def listar_pagamentos(request):
     else:
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-# GET, PUT, DELETE para Pagamentos
-@api_view(['GET', 'PUT', 'DELETE'])
+# GET, PUT, PATCH, DELETE para Pagamentos
+@api_view(['GET', 'PUT', 'PATCH', 'DELETE'])
 def detalhar_pagamento(request, pk):
     if request.method == 'GET':  
         pagamento = Pagamento.objects.get(pk=pk)
@@ -139,6 +167,13 @@ def detalhar_pagamento(request, pk):
     elif request.method == 'PUT':  
         pagamento = Pagamento.objects.get(pk=pk)
         serializer = PagamentoSerializer(pagamento, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)    
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    elif request.method == 'PATCH':
+        pagamento = Pagamento.objects.get(pk=pk)
+        serializer = PagamentoSerializer(pagamento, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
