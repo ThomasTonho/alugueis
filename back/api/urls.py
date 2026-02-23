@@ -1,5 +1,4 @@
-
-from django.urls import path
+from django.urls import path, include
 from .views import *
 from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import (
@@ -7,18 +6,34 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 
+router = DefaultRouter()
 
-app_name = "api"
+router.register(r'usuarios', UsuarioViewSet)
+router.register(r'imoveis', ImovelViewSet)
+router.register(r'contratos', ContratoViewSet)
+router.register(r'pagamentos', PagamentoViewSet)
+
 
 urlpatterns = [
-    path('usuarios/', listar_usuarios),
-    path('usuario/<int:pk>/', detalhar_usuario),
-    path('imoveis/', listar_imoveis),
-    path('imovel/<int:pk>/', detalhar_imovel),
-    path('contratos/', listar_contratos),
-    path('contrato/<int:pk>/', detalhar_contrato),
-    path('pagamentos/', listar_pagamentos),
-    path('pagamento/<int:pk>/', detalhar_pagamento),
-    path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('users', listar_usuarios, name="listar_usuarios"),
+
+    path('token', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('refresh', TokenRefreshView.as_view(), name='token_refresh'),
+
+    path('', include(router.urls))
+
+    # path('usuarios', UsuarioListCreateAPIView.as_view()),
+    # path('usuario/<int:pk>', UsuarioDetailView.as_view()),
+
+    # path('imoveis', ImovelListCreateAPIView.as_view()),
+    # path('imovel/<int:pk>', ImovelDetailView.as_view()),
+    
+    # path('pagamentos', PagamentoListCreateAPIView.as_view()),
+    # path('pagamento/<int:pk>', PagamentoDetailView.as_view()),
+    
+    # path('contratos', ContratoListCreateAPIView.as_view()),
+    # path('contrato/<int:pk>', ContratoDetailView.as_view()),
+
 ]
+
+
