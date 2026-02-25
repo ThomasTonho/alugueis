@@ -28,7 +28,7 @@ const HomeUser = () => {
 
   return (
     <div style={{ padding: "20px" }}>
-      <h2>Lista de Usuários</h2>
+      <h2>Lista de Usuários</h2>  
 
       <table border="1" cellPadding="10" cellSpacing="0">
         <thead>
