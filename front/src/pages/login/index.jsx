@@ -16,7 +16,7 @@ export default function App(){
         try {
             console.log("Teste");
             const response = await axios.post(
-                'http://127.0.0.1:8000/api/token',
+                'http://127.0.0.1:8000/api/token/',
                 {
                     username: user,
                     password: password

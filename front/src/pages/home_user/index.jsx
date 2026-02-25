@@ -1,55 +1,97 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React, { useEffect, useState } from "react"
+import axios from "axios"
 
-const HomeUser = () => {
-  const [usuarios, setUsuarios] = useState([]);
-  const [loading, setLoading] = useState(true);
+export default function HomeUser() {
+    const [user, setUser] = useState([])
+    const [search, setSearch] = useState('')
+    const [searchTerm, setSearchTerm] = useState('')
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem('token')
 
-    axios.get("http://localhost:8000/api/usuarios", {
-      headers: { Authorization: `Bearer ${token}` }
-    })
-    .then(response => {
-      console.log("Dados da API:", response.data); 
-      setUsuarios(response.data);
-      setLoading(false);
-    })
-    .catch(error => {
-      console.error("Erro ao buscar usuários:", error);
-      setLoading(false);
-    });
-  }, []);
+    const listar = async () => {
+        try {
+            const response = await axios.get('http://localhost:8000/api/usuarios', {
+                headers: { Authorization: `Bearer ${token}` }
+            })
+            setUser(response.data)
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
-  if (loading) {
-    return <p>Carregando usuários...</p>;
-  }
+    useEffect(() => { listar() }, [])
 
-  return (
-    <div style={{ padding: "20px" }}>
-      <h2>Lista de Usuários</h2>  
+    const filteredUsers = user.filter(u =>
+        u.nome.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
-      <table border="1" cellPadding="10" cellSpacing="0">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Nome</th>
-            <th>Email</th>
-          </tr>
-        </thead>
-        <tbody>
-          {usuarios.map((usuario) => (
-            <tr key={usuario.id}>
-              <td>{usuario.id}</td>
-              <td>{usuario.nome}</td>
-              <td>{usuario.email}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
-};
+    const handleSearch = () => {
+        setSearchTerm(search)
+    }
 
-export default HomeUser;
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter') handleSearch()
+    }
+
+    return (
+        <div>
+            <h2>Lista de Usuários</h2>
+
+            {/* Caixa de busca + botão */}
+            <div style={{ display: "flex", gap: "8px", marginBottom: "10px" }}>
+                <input
+                    type="text"
+                    placeholder="Buscar por nome..."
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    onKeyDown={handleKeyDown}
+                    style={{ padding: "5px", width: "200px" }}
+                />
+                <button onClick={handleSearch} style={{ padding: "5px 12px", cursor: "pointer" }}>
+                    Pesquisar
+                </button>
+                {searchTerm && (
+                    <button
+                        onClick={() => { setSearch(''); setSearchTerm('') }}
+                        style={{ padding: "5px 12px", cursor: "pointer" }}
+                    >
+                        Limpar
+                    </button>
+                )}
+            </div>
+
+            {/* Tabela principal */}
+            <table border="1" cellPadding="6" style={{ width: "100%" }}>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nome</th>
+                        <th>Email</th>
+                        <th>Telefone</th>
+                        <th>Tipo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {filteredUsers.length > 0 ? (
+                        filteredUsers.map((u) => (
+                            <tr key={u.id}>
+                                <td>{u.id}</td>
+                                <td>{u.nome}</td>
+                                <td>{u.email}</td>
+                                <td>{u.telefone}</td>
+                                <td>{u.tipo}</td>
+                            </tr>
+                        ))
+                    ) : (
+                        <tr>
+                            <td colSpan="5" style={{ textAlign: "center" }}>
+                                Nenhum usuário encontrado.
+                            </td>
+                        </tr>
+                    )}
+                </tbody>
+            </table>
+            <hr style={{ margin: "20px 0" }} />
+        </div>
+    )
+}

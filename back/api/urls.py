@@ -17,8 +17,8 @@ router.register(r'pagamentos', PagamentoViewSet)
 urlpatterns = [
     path('users', listar_usuarios, name="listar_usuarios"),
 
-    path('token', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('refresh', TokenRefreshView.as_view(), name='token_refresh'),
+    path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 
     path('', include(router.urls))
 

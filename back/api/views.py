@@ -15,7 +15,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 class UsuarioViewSet(ModelViewSet):
     queryset = Usuario.objects.all()
     serializer_class = UsuarioSerializer
-    ## permission_classes = [IsAuthenticated]
+    ##permission_classes = [IsAuthenticated]
 
     filter_backends = [DjangoFilterBackend]
     filterset_class = UsuarioFilter
@@ -25,10 +25,6 @@ class UsuarioViewSet(ModelViewSet):
     #    if tipo:
     #        self.queryset = self.queryset.filter(tipo=tipo)
     #    return self.queryset
-
-    filter_backends = [DjangoFilterBackend]
-    filterset_class = ImovelFilter
-
 
 class ImovelViewSet(ModelViewSet):
     queryset = Imovel.objects.all()
