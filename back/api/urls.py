@@ -12,13 +12,16 @@ router.register(r'usuarios', UsuarioViewSet)
 router.register(r'imoveis', ImovelViewSet)
 router.register(r'contratos', ContratoViewSet)
 router.register(r'pagamentos', PagamentoViewSet)
+# router.register(r'register', RegisterViewSet)
 
 
 urlpatterns = [
     path('users', listar_usuarios, name="listar_usuarios"),
 
-    path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('token', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('refresh', TokenRefreshView.as_view(), name='token_refresh'),
+
+    path('register/', RegisterViewSet.as_view()),
 
     path('', include(router.urls))
 

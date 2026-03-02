@@ -7,7 +7,7 @@ from .models import Usuario, Imovel, Contrato, Pagamento
 from rest_framework.decorators import api_view
 from .serializers import *
 from rest_framework.viewsets import ModelViewSet
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from .filters import *
 from django_filters.rest_framework import DjangoFilterBackend
 
@@ -15,32 +15,44 @@ from django_filters.rest_framework import DjangoFilterBackend
 class UsuarioViewSet(ModelViewSet):
     queryset = Usuario.objects.all()
     serializer_class = UsuarioSerializer
-    ##permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
+
+    # def get_queryset(self):
+    #     tipo = self.request.query_params.get('tipo')
+    #     if tipo:
+    #         self.queryset = self.queryset.filter(tipo=tipo)
+    #     return self.queryset
 
     filter_backends = [DjangoFilterBackend]
     filterset_class = UsuarioFilter
 
-    #def get_queryset(self):
-    #    tipo = self.request.query_params.get('tipo')
-    #    if tipo:
-    #        self.queryset = self.queryset.filter(tipo=tipo)
-    #    return self.queryset
+class RegisterViewSet(APIView):
+    permission_classes=[AllowAny]
+
+    def post(self, request):
+        serializer = RegisterSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            return Response({"detail": "Usuário criado com sucesso."}, status=status.HTTP_201_CREATED)
+        return Response({"detail": "Erro ao criar o usuário."}, status=status.HTTP_400_BAD_REQUEST)
 
 class ImovelViewSet(ModelViewSet):
     queryset = Imovel.objects.all()
     serializer_class = ImovelSerializer
 
+    # def get_queryset(self):
+    #     status = self.request.query_params.get('status')
+    #     tipo = self.request.query_params.get('tipo')
+
+    #     if status:
+    #         self.queryset = self.queryset.filter(status=status)
+    #     if tipo:
+    #         self.queryset = self.queryset.filter(tipo=tipo)
+    #     return self.queryset
+
     filter_backends = [DjangoFilterBackend]
     filterset_class = ImovelFilter
-
-    #def get_queryset(self):
-      #  status = self.request.query_params.get('status')
-      #  tipo = self.request.query_params.get('tipo')
-       # if status:
-      #      self.queryset = self.queryset.filter(status=status)
-      #  if tipo:
-      #      self.queryset = self.queryset.filter(tipo=tipo)
-      #  return self.queryset
 
 class ContratoViewSet(ModelViewSet):
     queryset = Contrato.objects.all()
