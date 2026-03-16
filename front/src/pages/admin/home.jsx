@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import axios from "axios"
 
-export default function HomeUser() {
+export default function HomeAdmin() {
     const [user, setUser] = useState([])
     const [search, setSearch] = useState('')
     const [searchTerm, setSearchTerm] = useState('')

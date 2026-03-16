@@ -35,3 +35,5 @@ class PagamentoFilter(django_filters.FilterSet):
     class Meta:
         model = Pagamento
         fields = ['data_pagamento', 'status', 'contrato_id']
+
+# ####################################################
