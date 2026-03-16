@@ -8,6 +8,7 @@ import PropertiesAdmin from './pages/admin/properties';
 import ContractsAdmin from './pages/admin/contracts';
 import PaymentsAdmin from './pages/admin/payments';
 import HomeAdmin from './pages/admin/home';
+import Register from './pages/register/register';
 
 export default function App() {
   return (
@@ -15,6 +16,8 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Login /> } />
         <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+
         
         <Route path="/user/home" element={<HomeUser />} />
         <Route path="/user/properties" element={<PropertiesUser />} />
