@@ -46,7 +46,7 @@ export default function Login() {
 
       // 4) Redirecionamento por perfil
       if (is_staff) {
-        navigate("/admin/home");
+        navigate("/admin");
       } else {
         navigate("/user/home");
       }

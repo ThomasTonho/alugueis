@@ -116,3 +116,47 @@ class RegisterView(APIView):
             serializer.save()
             return Response({"detail":"Usuário criado com sucesso."}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class DashboardViewSet(ModelViewSet):
+    permission_classes=[IsAuthenticated]
+    http_method_names = ['get']
+
+    queryset = Imovel.objects.all()
+    serializer_class = ImovelSerializer
+
+    def list(self, request, *args, **kwargs):
+        total_imoveis = Imovel.objects.count()
+        disponiveis = Imovel.objects.filter(status="DISPONIVEL").count()
+        alugados = Imovel.objects.filter(status="ALUGADO").count()
+        pagamentos_em_aberto = Pagamento.objects.filter(status=False).count()
+
+        # Ultimos 5 contratos
+        contratos_recentes = (Contrato.objects
+        .select_related('imovel', 'locador', 'locatario')
+        .order_by('-id')[:5]
+        .values('id', 'data_inicio', 'data_fim', 'valor',
+                'imovel_id', 'imovel__titulo', 'locador__nome', 
+                'locatario__nome'
+                )
+        )
+
+        # Ultimos 5 imoveis
+        imoveis_destaque = (
+            Imovel.objects
+            .order_by('-id')[:5]
+            .values('id', 'titulo', 'tipo', 'status', 'valor_aluguel', 'locador_id')
+        )
+
+        return Response({
+            "status": {
+                "imoveis_cadastrados": total_imoveis,
+                "disponiveis": disponiveis,
+                "alugados": alugados,
+                "pagamentos_em_aberto": pagamentos_em_aberto
+            },
+            "imoveis_destaque": list(imoveis_destaque),
+            "contratos_recentes": list(contratos_recentes)
+        }
+        )
+
